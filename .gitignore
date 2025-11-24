@@ -48,8 +48,7 @@ buildNumber.properties
 .idea/
 *.iws
 *.iml
-*.ipr
-out/
+*.ip
 .idea_modules/
 *.swp
 *.swo
