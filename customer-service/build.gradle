@@ -1,0 +1,114 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.1'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id 'org.openapi.generator' version '7.10.0'
+}
+
+group = 'com.nttdata'
+version = '1.0.0'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Spring Boot WebFlux
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    
+    // Spring Data R2DBC for reactive database access
+    implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+    
+    // PostgreSQL R2DBC Driver
+    implementation 'org.postgresql:r2dbc-postgresql'
+    
+    // PostgreSQL JDBC Driver (for migrations)
+    runtimeOnly 'org.postgresql:postgresql'
+    
+    // Spring Kafka
+    implementation 'org.springframework.kafka:spring-kafka'
+    implementation 'io.projectreactor.kafka:reactor-kafka'
+    
+    // Validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    
+    // OpenAPI Generator dependencies
+    implementation 'org.openapitools:jackson-databind-nullable:0.2.6'
+    implementation 'jakarta.validation:jakarta.validation-api'
+    implementation 'jakarta.annotation:jakarta.annotation-api'
+    
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    
+    // MapStruct for mapping
+    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+    
+    // Logging
+    implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
+    
+    // OpenAPI
+    implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.3.0'
+    
+    // Jackson
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    
+    // Test dependencies
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'io.projectreactor:reactor-test'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
+    testImplementation 'org.mockito:mockito-core'
+    testImplementation 'org.mockito:mockito-junit-jupiter'
+    
+    // Testcontainers for integration tests
+    testImplementation 'org.testcontainers:testcontainers:1.19.3'
+    testImplementation 'org.testcontainers:postgresql:1.19.3'
+    testImplementation 'org.testcontainers:kafka:1.19.3'
+    testImplementation 'org.testcontainers:junit-jupiter:1.19.3'
+    
+    // PITest for mutation testing (optional)
+    testImplementation 'org.pitest:pitest-junit5-plugin:1.2.1'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+openApiGenerate {
+    generatorName = "spring"
+    inputSpec = "$projectDir/src/main/resources/openapi/customer-api.yaml".toString()
+    outputDir = "$buildDir/generated".toString()
+    apiPackage = "com.nttdata.customer.infrastructure.adapter.in.rest.api"
+    modelPackage = "com.nttdata.customer.infrastructure.adapter.in.rest.dto"
+    configOptions = [
+            dateLibrary: "java8",
+            interfaceOnly: "true",
+            skipDefaultInterface: "true",
+            useTags: "true",
+            reactive: "true",
+            useSpringBoot3: "true",
+            useBeanValidation: "true"
+    ]
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java', "$buildDir/generated/src/main/java"]
+        }
+    }
+}
+
+compileJava.dependsOn tasks.openApiGenerate

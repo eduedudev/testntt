@@ -1,0 +1,456 @@
+openapi: 3.0.3
+info:
+  title: Account Service API
+  description: API for managing accounts and movements
+  version: 1.0.0
+  contact:
+    name: NTT Data
+    email: support@nttdata.com
+
+servers:
+  - url: http://localhost:8081
+    description: Local server
+
+tags:
+  - name: Accounts
+    description: Account management operations
+  - name: Movements
+    description: Movement management operations
+  - name: Reports
+    description: Report generation operations
+
+paths:
+  /api/v1/accounts:
+    get:
+      tags:
+        - Accounts
+      summary: Get all accounts
+      operationId: getAllAccounts
+      responses:
+        '200':
+          description: List of accounts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountResponse'
+    post:
+      tags:
+        - Accounts
+      summary: Create a new account
+      operationId: createAccount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountRequest'
+      responses:
+        '201':
+          description: Account created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/accounts/{id}:
+    get:
+      tags:
+        - Accounts
+      summary: Get account by ID
+      operationId: getAccountById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Account found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountResponse'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - Accounts
+      summary: Update account
+      operationId: updateAccount
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountRequest'
+      responses:
+        '200':
+          description: Account updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountResponse'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - Accounts
+      summary: Delete account
+      operationId: deleteAccount
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Account deleted successfully
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/movements:
+    get:
+      tags:
+        - Movements
+      summary: Get all movements
+      operationId: getAllMovements
+      responses:
+        '200':
+          description: List of movements
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MovementResponse'
+    post:
+      tags:
+        - Movements
+      summary: Create a new movement
+      operationId: createMovement
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MovementRequest'
+      responses:
+        '201':
+          description: Movement created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovementResponse'
+        '400':
+          description: Invalid input or insufficient balance
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/movements/{id}:
+    get:
+      tags:
+        - Movements
+      summary: Get movement by ID
+      operationId: getMovementById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Movement found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovementResponse'
+        '404':
+          description: Movement not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - Movements
+      summary: Update movement
+      operationId: updateMovement
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MovementRequest'
+      responses:
+        '200':
+          description: Movement updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovementResponse'
+        '404':
+          description: Movement not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - Movements
+      summary: Delete movement
+      operationId: deleteMovement
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Movement deleted successfully
+        '404':
+          description: Movement not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/reports/{clientId}:
+    get:
+      tags:
+        - Reports
+      summary: Generate account statement report
+      operationId: getAccountStatement
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: startDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+          example: "2022-02-01"
+        - name: endDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+          example: "2022-02-28"
+      responses:
+        '200':
+          description: Account statement report
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountStatementResponse'
+        '404':
+          description: Client not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    AccountRequest:
+      type: object
+      required:
+        - accountNumber
+        - accountType
+        - initialBalance
+        - status
+        - customerId
+      properties:
+        accountNumber:
+          type: string
+          example: "478758"
+        accountType:
+          type: string
+          enum: [SAVING, CHECKING]
+          example: "SAVING"
+        initialBalance:
+          type: number
+          format: double
+          example: 2000.00
+        status:
+          type: boolean
+          example: true
+        customerId:
+          type: string
+          format: uuid
+
+    AccountResponse:
+      type: object
+      properties:
+        accountId:
+          type: string
+          format: uuid
+        accountNumber:
+          type: string
+        accountType:
+          type: string
+        currentBalance:
+          type: number
+          format: double
+        status:
+          type: boolean
+        customerId:
+          type: string
+          format: uuid
+        customerName:
+          type: string
+
+    MovementRequest:
+      type: object
+      required:
+        - accountId
+        - movementType
+        - value
+      properties:
+        accountId:
+          type: string
+          format: uuid
+        movementType:
+          type: string
+          enum: [CREDIT, DEBIT]
+          example: "CREDIT"
+        value:
+          type: number
+          format: double
+          example: 600.00
+
+    MovementResponse:
+      type: object
+      properties:
+        movementId:
+          type: string
+          format: uuid
+        date:
+          type: string
+          format: date-time
+        movementType:
+          type: string
+        value:
+          type: number
+          format: double
+        balance:
+          type: number
+          format: double
+        accountId:
+          type: string
+          format: uuid
+        accountNumber:
+          type: string
+
+    AccountStatementResponse:
+      type: object
+      properties:
+        clientId:
+          type: string
+          format: uuid
+        clientName:
+          type: string
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountStatementDetail'
+
+    AccountStatementDetail:
+      type: object
+      properties:
+        accountNumber:
+          type: string
+        accountType:
+          type: string
+        currentBalance:
+          type: number
+          format: double
+        movements:
+          type: array
+          items:
+            $ref: '#/components/schemas/MovementDetail'
+
+    MovementDetail:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date-time
+        movementType:
+          type: string
+        value:
+          type: number
+          format: double
+        balance:
+          type: number
+          format: double
+
+    ErrorResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: integer
+        error:
+          type: string
+        message:
+          type: string
+        path:
+          type: string

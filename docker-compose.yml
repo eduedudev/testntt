@@ -1,0 +1,149 @@
+version: '3.8'
+
+services:
+  # PostgreSQL for Customer Service
+  customer-db:
+    image: postgres:15-alpine
+    container_name: customer-db
+    environment:
+      POSTGRES_DB: customer_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - customer-db-data:/var/lib/postgresql/data
+      - ./init-customer-db.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - banking-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # PostgreSQL for Account Service
+  account-db:
+    image: postgres:15-alpine
+    container_name: account-db
+    environment:
+      POSTGRES_DB: account_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - account-db-data:/var/lib/postgresql/data
+      - ./init-account-db.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - banking-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Zookeeper for Kafka
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - banking-network
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "2181"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Kafka
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: kafka
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    networks:
+      - banking-network
+    healthcheck:
+      test: ["CMD", "kafka-topics", "--bootstrap-server", "localhost:9092", "--list"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Customer Service
+  customer-service:
+    build:
+      context: ./customer-service
+      dockerfile: Dockerfile
+    container_name: customer-service
+    depends_on:
+      customer-db:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    environment:
+      SPRING_R2DBC_URL: r2dbc:postgresql://customer-db:5432/customer_db
+      SPRING_R2DBC_USERNAME: postgres
+      SPRING_R2DBC_PASSWORD: postgres
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    ports:
+      - "8080:8080"
+    networks:
+      - banking-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
+  # Account Service
+  account-service:
+    build:
+      context: ./account-service
+      dockerfile: Dockerfile
+    container_name: account-service
+    depends_on:
+      account-db:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    environment:
+      SPRING_R2DBC_URL: r2dbc:postgresql://account-db:5432/account_db
+      SPRING_R2DBC_USERNAME: postgres
+      SPRING_R2DBC_PASSWORD: postgres
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    ports:
+      - "8081:8081"
+    networks:
+      - banking-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
+networks:
+  banking-network:
+    driver: bridge
+
+volumes:
+  customer-db-data:
+  account-db-data:

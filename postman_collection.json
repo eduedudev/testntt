@@ -1,0 +1,406 @@
+{
+  "info": {
+    "name": "NTT Data Banking System API",
+    "description": "Colección de pruebas para el sistema bancario - Prueba Técnica Senior",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Customer Service",
+      "item": [
+        {
+          "name": "Get All Customers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{customer_service_url}}/api/v1/customers",
+              "host": ["{{customer_service_url}}"],
+              "path": ["api", "v1", "customers"]
+            }
+          }
+        },
+        {
+          "name": "Create Customer - Jose Lema",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Jose Lema\",\n  \"gender\": \"MALE\",\n  \"identification\": \"1234567890\",\n  \"address\": \"Otavalo sn y principal\",\n  \"phone\": \"098254785\",\n  \"password\": \"1234\",\n  \"status\": true\n}"
+            },
+            "url": {
+              "raw": "{{customer_service_url}}/api/v1/customers",
+              "host": ["{{customer_service_url}}"],
+              "path": ["api", "v1", "customers"]
+            }
+          }
+        },
+        {
+          "name": "Create Customer - Marianela Montalvo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Marianela Montalvo\",\n  \"gender\": \"FEMALE\",\n  \"identification\": \"0987654321\",\n  \"address\": \"Amazonas y NNUU\",\n  \"phone\": \"097548965\",\n  \"password\": \"5678\",\n  \"status\": true\n}"
+            },
+            "url": {
+              "raw": "{{customer_service_url}}/api/v1/customers",
+              "host": ["{{customer_service_url}}"],
+              "path": ["api", "v1", "customers"]
+            }
+          }
+        },
+        {
+          "name": "Create Customer - Juan Osorio",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Juan Osorio\",\n  \"gender\": \"MALE\",\n  \"identification\": \"1122334455\",\n  \"address\": \"13 junio y Equinoccial\",\n  \"phone\": \"098874587\",\n  \"password\": \"1245\",\n  \"status\": true\n}"
+            },
+            "url": {
+              "raw": "{{customer_service_url}}/api/v1/customers",
+              "host": ["{{customer_service_url}}"],
+              "path": ["api", "v1", "customers"]
+            }
+          }
+        },
+        {
+          "name": "Get Customer By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{customer_service_url}}/api/v1/customers/{{customer_id}}",
+              "host": ["{{customer_service_url}}"],
+              "path": ["api", "v1", "customers", "{{customer_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Customer",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Jose Lema Updated\",\n  \"gender\": \"MALE\",\n  \"identification\": \"1234567890\",\n  \"address\": \"Nueva Dirección\",\n  \"phone\": \"098254785\",\n  \"password\": \"newpass\",\n  \"status\": true\n}"
+            },
+            "url": {
+              "raw": "{{customer_service_url}}/api/v1/customers/{{customer_id}}",
+              "host": ["{{customer_service_url}}"],
+              "path": ["api", "v1", "customers", "{{customer_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Customer",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{customer_service_url}}/api/v1/customers/{{customer_id}}",
+              "host": ["{{customer_service_url}}"],
+              "path": ["api", "v1", "customers", "{{customer_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Account Service",
+      "item": [
+        {
+          "name": "Accounts",
+          "item": [
+            {
+              "name": "Get All Accounts",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{account_service_url}}/api/v1/accounts",
+                  "host": ["{{account_service_url}}"],
+                  "path": ["api", "v1", "accounts"]
+                }
+              }
+            },
+            {
+              "name": "Create Account - Ahorro Jose Lema",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"accountNumber\": \"478758\",\n  \"accountType\": \"SAVING\",\n  \"initialBalance\": 2000.00,\n  \"status\": true,\n  \"customerId\": \"550e8400-e29b-41d4-a716-446655440001\"\n}"
+                },
+                "url": {
+                  "raw": "{{account_service_url}}/api/v1/accounts",
+                  "host": ["{{account_service_url}}"],
+                  "path": ["api", "v1", "accounts"]
+                }
+              }
+            },
+            {
+              "name": "Create Account - Corriente Marianela",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"accountNumber\": \"225487\",\n  \"accountType\": \"CHECKING\",\n  \"initialBalance\": 100.00,\n  \"status\": true,\n  \"customerId\": \"550e8400-e29b-41d4-a716-446655440002\"\n}"
+                },
+                "url": {
+                  "raw": "{{account_service_url}}/api/v1/accounts",
+                  "host": ["{{account_service_url}}"],
+                  "path": ["api", "v1", "accounts"]
+                }
+              }
+            },
+            {
+              "name": "Get Account By ID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{account_service_url}}/api/v1/accounts/{{account_id}}",
+                  "host": ["{{account_service_url}}"],
+                  "path": ["api", "v1", "accounts", "{{account_id}}"]
+                }
+              }
+            },
+            {
+              "name": "Update Account",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"accountNumber\": \"478758\",\n  \"accountType\": \"SAVING\",\n  \"initialBalance\": 2000.00,\n  \"status\": false,\n  \"customerId\": \"550e8400-e29b-41d4-a716-446655440001\"\n}"
+                },
+                "url": {
+                  "raw": "{{account_service_url}}/api/v1/accounts/{{account_id}}",
+                  "host": ["{{account_service_url}}"],
+                  "path": ["api", "v1", "accounts", "{{account_id}}"]
+                }
+              }
+            },
+            {
+              "name": "Delete Account",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{account_service_url}}/api/v1/accounts/{{account_id}}",
+                  "host": ["{{account_service_url}}"],
+                  "path": ["api", "v1", "accounts", "{{account_id}}"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Movements",
+          "item": [
+            {
+              "name": "Get All Movements",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{account_service_url}}/api/v1/movements",
+                  "host": ["{{account_service_url}}"],
+                  "path": ["api", "v1", "movements"]
+                }
+              }
+            },
+            {
+              "name": "Create Movement - Retiro 575",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"accountId\": \"660e8400-e29b-41d4-a716-446655440001\",\n  \"movementType\": \"DEBIT\",\n  \"value\": 575.00\n}"
+                },
+                "url": {
+                  "raw": "{{account_service_url}}/api/v1/movements",
+                  "host": ["{{account_service_url}}"],
+                  "path": ["api", "v1", "movements"]
+                }
+              }
+            },
+            {
+              "name": "Create Movement - Depósito 600",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"accountId\": \"660e8400-e29b-41d4-a716-446655440002\",\n  \"movementType\": \"CREDIT\",\n  \"value\": 600.00\n}"
+                },
+                "url": {
+                  "raw": "{{account_service_url}}/api/v1/movements",
+                  "host": ["{{account_service_url}}"],
+                  "path": ["api", "v1", "movements"]
+                }
+              }
+            },
+            {
+              "name": "Create Movement - Sin Saldo (Error)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"accountId\": \"660e8400-e29b-41d4-a716-446655440003\",\n  \"movementType\": \"DEBIT\",\n  \"value\": 1000.00\n}"
+                },
+                "url": {
+                  "raw": "{{account_service_url}}/api/v1/movements",
+                  "host": ["{{account_service_url}}"],
+                  "path": ["api", "v1", "movements"]
+                }
+              }
+            },
+            {
+              "name": "Get Movement By ID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{account_service_url}}/api/v1/movements/{{movement_id}}",
+                  "host": ["{{account_service_url}}"],
+                  "path": ["api", "v1", "movements", "{{movement_id}}"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Reports",
+          "item": [
+            {
+              "name": "Account Statement - Marianela Montalvo",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{account_service_url}}/api/v1/reports/550e8400-e29b-41d4-a716-446655440002?startDate=2022-02-01&endDate=2022-02-28",
+                  "host": ["{{account_service_url}}"],
+                  "path": ["api", "v1", "reports", "550e8400-e29b-41d4-a716-446655440002"],
+                  "query": [
+                    {
+                      "key": "startDate",
+                      "value": "2022-02-01"
+                    },
+                    {
+                      "key": "endDate",
+                      "value": "2022-02-28"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Account Statement - Jose Lema",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{account_service_url}}/api/v1/reports/550e8400-e29b-41d4-a716-446655440001?startDate=2022-02-01&endDate=2022-02-28",
+                  "host": ["{{account_service_url}}"],
+                  "path": ["api", "v1", "reports", "550e8400-e29b-41d4-a716-446655440001"],
+                  "query": [
+                    {
+                      "key": "startDate",
+                      "value": "2022-02-01"
+                    },
+                    {
+                      "key": "endDate",
+                      "value": "2022-02-28"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "customer_service_url",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "account_service_url",
+      "value": "http://localhost:8081"
+    },
+    {
+      "key": "customer_id",
+      "value": "550e8400-e29b-41d4-a716-446655440001"
+    },
+    {
+      "key": "account_id",
+      "value": "660e8400-e29b-41d4-a716-446655440001"
+    },
+    {
+      "key": "movement_id",
+      "value": "770e8400-e29b-41d4-a716-446655440001"
+    }
+  ]
+}
